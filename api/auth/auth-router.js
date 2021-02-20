@@ -1,8 +1,8 @@
 const router = require('express').Router();
 const bcryptjs= require('bcryptjs');
-const jwt= require('jsonwebtoken');
+// const jwt= require('jsonwebtoken');
 const { findByUsername } = require('./auth-model');
-const secrets=require('../../config/secret');
+// const secrets=require('../../config/secret');
 const {validateCredential,
 validateRegister}= require('../middleware/auth-middleware');
 const {addUser}=require('./auth-model');
@@ -53,8 +53,9 @@ router.post('/login', validateCredential, async (req,res,next) => {
     const user = await findByUsername(username);
     //validate hashed password 
     if(user && bcryptjs.compareSync(password,user.password)){
-      const token=generateToken(user);
-      res.status(200).json({message:`welcome, ${user.username}`,token})
+      //using Session for stretch
+      req.session.user =user //to indicate new session created for user
+      res.status(200).json({message:`welcome, ${user.username}`})
     }else{
       res.status(401).json({message:"invalid credentials"})
     }
@@ -86,17 +87,17 @@ router.post('/login', validateCredential, async (req,res,next) => {
   */
 });
 
-function generateToken(user){
-  const payload={
-    subject:user.id,
-    username:user.username,
-  }
-  const options={
-    expiresIn:"1h"
-  }
-  //generate signature
-  const secret=secrets.jwtSecret;
-  return jwt.sign(payload,secret,options)
-}
+// function generateToken(user){
+//   const payload={
+//     subject:user.id,
+//     username:user.username,
+//   }
+//   const options={
+//     expiresIn:"1h"
+//   }
+//   //generate signature
+//   const secret=secrets.jwtSecret;
+//   return jwt.sign(payload,secret,options)
+// }
 
 module.exports = router;

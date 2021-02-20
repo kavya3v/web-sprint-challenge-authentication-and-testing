@@ -1,4 +1,4 @@
-module.exports={validateCredential,validateRegister}
+module.exports={validateCredential,validateRegister,validateSession}
 const {findByUsername}=require('../auth/auth-model');
 
 function validateCredential(req,res,next){
@@ -19,5 +19,13 @@ async function validateRegister(req,res,next){
         res.status(400).json({message:"username taken"})
     }else{
         next()
+    }
+}
+
+function validateSession(req,res,next){
+    if(req.session && req.session.user){
+        next()
+    }else{
+        res.status(400).json({message: "Session expired, please login"})
     }
 }
