@@ -74,6 +74,20 @@ Submit via Codegrade. Remember to add a query string to your Webhook's Payload U
 Be prepared to demonstrate your understanding of this week's concepts by answering questions on the following topics.
 
 1. Differences between using _sessions_ or _JSON Web Tokens_ for authentication.
+In session based authentication, server will create session for the user login.Then the session id wl be stored on the user's browser. While the user is logged in , the cookie will be send across every coming request for the server to compare against the cookie in its memory/db.
+Using JWT - the server creates JWT with a secret and sents the tokent to the client. The client then stores it in localstorage and then include this token in the header of the request.
+Refer for me - 
+https://medium.com/@sherryhsu/session-vs-token-based-authentication-11a6c5ac45e4
+
 2. What does `bcryptjs` do to help us store passwords in a secure manner?
+  Bcrypt stores password in a secure manner - as it uses salted hashing algorighm, which is one way function i.e the data cannot be reversed.
+For future ref-
+https://js.plainenglish.io/how-bcryptjs-works-90ef4cb85bf4
+
 3. How are unit tests different from integration and end-to-end testing?
+  unit tests focuses on the single functionality of the application.
+  whereas Integration test deals with testing the interation between two or more functions.(In our case testing the node api call and value received from db - involves multiple functions and their interation)
+  End to end testing is replicating the user interaction and testing the behaviour of the entire application.
+
 4. How does _Test Driven Development_ change the way we write applications and tests?
+In the Test driven development process, the requirments are converted into testcases first - and then turned into the coded software.By focusing on the testcases first, one must imagine how the funcitonlity will be used by client.This way the programmer gets the clean insight of the design and more attention is made before the implementation.
