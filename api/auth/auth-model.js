@@ -3,8 +3,7 @@ const dbUsers=require('../../data/dbConfig');
 module.exports={findByUsername,addUser,getByUserId}
 
 async function findByUsername(username){
-    const user=await dbUsers("users").where('username',username)
-    // console.log('user in getByUser=',user)
+    const user=await dbUsers("users").where('username',username).first();
     return user; 
 }
 

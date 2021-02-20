@@ -9,8 +9,7 @@ const {addUser}=require('./auth-model');
 
 router.post('/register', validateCredential, validateRegister, async (req, res,next) => {
   const credentials=req.body;
-  //if valid credentials
-  //get rounds from env variable
+  //if valid credentials - get rounds from env variable
   const rounds=process.env.BCRYPT_ROUNDS || 8;
   //password hash and set the value
   const hash=bcryptjs.hashSync(credentials.password,rounds);
@@ -18,9 +17,7 @@ router.post('/register', validateCredential, validateRegister, async (req, res,n
   try {
     //add user to db
     const [registeredUser]= await addUser(credentials);
-    // const token=generateToken(registeredUser);
     res.status(201).json(registeredUser);
-    //   res.status(201).json({message: "Register Success",data: registeredUser,token})
   } catch (err) {
     next(err)
   }
@@ -53,7 +50,8 @@ router.post('/register', validateCredential, validateRegister, async (req, res,n
 router.post('/login', validateCredential, async (req,res,next) => {
   try {
     const {username,password}= req.body;
-    const [user] = await findByUsername(username);
+    const user = await findByUsername(username);
+    console.log('user i login= ',user)
     //validate hashed password 
     if(user && bcryptjs.compareSync(password,user.password)){
       const token=generateToken(user);

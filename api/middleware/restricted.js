@@ -5,7 +5,8 @@ module.exports = (req, res, next) => {
   //restricted function - to verify the token from req!!!!
   //grab the token from req header - to be in the Authorization token
   console.log('auth in restricted=',req.headers.authorization);
-  const token=req.headers?.authorization?.split(" ")[1]; //gets rid of bearer space
+  const token=req.headers?.authorization?.split(" ")[1] ?? req.headers?.authorization; //gets rid of bearer space using split / or handle without bearer
+
   if(token){
     //verify against the secret
     jwt.verify(token,secrets.jwtSecret,(err,decodedToken)=>{
