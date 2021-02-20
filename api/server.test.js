@@ -22,7 +22,7 @@ describe("test authorization",()=>{
  
 test("POST /",async ()=>{
   const testAccount={username:"moon",password:"password"}
-  const res= await (await supertest(server).post('/api/auth/register').send(testAccount));
+  const res= await supertest(server).post('/api/auth/register').send(testAccount);
   expect(res.statusCode).toBe(201)
   expect(res.type).toBe("application/json")
   expect(res.body.username).toBe("moon")
@@ -31,9 +31,9 @@ test("POST /",async ()=>{
 test("POST / for existing account ",async ()=>{
   const testAccount={username:"moon",password:"password"}
   //create account 
-  await (await supertest(server).post('/api/auth/register').send(testAccount));
+  await supertest(server).post('/api/auth/register').send(testAccount);
   //register for the existing credential username "moon"
-  const res= await (await supertest(server).post('/api/auth/register').send(testAccount));
+  const res= await supertest(server).post('/api/auth/register').send(testAccount);
   expect(res.statusCode).toBe(400)
   expect(res.type).toBe("application/json")
   expect(res.body.message).toBe("username taken")
@@ -42,9 +42,9 @@ test("POST / for existing account ",async ()=>{
 test("Login / for existing account ",async ()=>{
   const testAccount={username:"moon",password:"password"}
   //create account 
-  await (await supertest(server).post('/api/auth/register').send(testAccount));
+  await supertest(server).post('/api/auth/register').send(testAccount);
   //login with the valid existing credential username "moon"
-  const res= await (await supertest(server).post('/api/auth/login').send(testAccount));
+  const res= await supertest(server).post('/api/auth/login').send(testAccount);
   expect(res.statusCode).toBe(200)
   expect(res.type).toBe("application/json")
   console.log(res.body)
@@ -55,20 +55,22 @@ test("Login / with invalid password",async ()=>{
   const testAccount={username:"moon",password:"password"}
   const incorrect={username:"moon",password:"password1"}
   //create account 
-  await (await supertest(server).post('/api/auth/register').send(testAccount));
+  await supertest(server).post('/api/auth/register').send(testAccount);
   //login with invalid credential
-  const res= await (await supertest(server).post('/api/auth/login').send(incorrect));
+  const res= await supertest(server).post('/api/auth/login').send(incorrect);
   expect(res.statusCode).toBe(401)
   expect(res.type).toBe("application/json")
   expect(res.body.message).toBe(`invalid credentials`)
 })
 
+
+
 test("GET / to jokes router with valid login" ,async ()=>{
   const testAccount={username:"moon",password:"password"}
   //create account 
-  await (await supertest(server).post('/api/auth/register').send(testAccount));
+  await supertest(server).post('/api/auth/register').send(testAccount);
   //login with valid credential
-  const res= await (await supertest(server).post('/api/auth/login').send(testAccount));
+  const res= await supertest(server).post('/api/auth/login').send(testAccount);
   expect(res.statusCode).toBe(200)
   expect(res.type).toBe("application/json")
   const token=res.body.token;
@@ -79,5 +81,20 @@ test("GET / to jokes router with valid login" ,async ()=>{
   console.log(resp.body[0]);
   expect(JSON.stringify(resp.body)).toEqual(expect.stringMatching("I'm tired of following my dreams."))
   })
-})
 
+  //stretch to test validateCredential function  
+test("POST test validate Credential" ,async ()=>{
+  const valAccount={username:"moon"}
+  //create account 
+  const res= await supertest(server).post('/api/auth/register').send(valAccount);
+  expect(res.statusCode).toBe(400)
+  expect(res.type).toBe("application/json")
+  expect(res.body.message).toBe("username and password required")
+  })
+  test("POST test validate Credential with empty body" ,async ()=>{
+    const res= await supertest(server).post('/api/auth/register').send();
+    expect(res.statusCode).toBe(400)
+    expect(res.type).toBe("application/json")
+    expect(res.body.message).toBe("username and password required")
+    })
+})
