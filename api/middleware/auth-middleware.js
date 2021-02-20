@@ -15,7 +15,6 @@ async function validateRegister(req,res,next){
     //check if username exists already in the users db
     const user= await findByUsername(req.body.username);
     //username taken / user exists
-    console.log('user in regis=',user)
     if(user){
         res.status(400).json({message:"username taken"})
     }else{

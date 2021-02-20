@@ -51,7 +51,6 @@ router.post('/login', validateCredential, async (req,res,next) => {
   try {
     const {username,password}= req.body;
     const user = await findByUsername(username);
-    console.log('user i login= ',user)
     //validate hashed password 
     if(user && bcryptjs.compareSync(password,user.password)){
       const token=generateToken(user);
